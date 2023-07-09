@@ -1,0 +1,12 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.demo-header{
+    width: 100%;
+    height: 200px;
+    background-color: #222222;
+}
+.demo-header h2{
+    color: #ffffff;
+}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件</title>
+</head>
+<body>
+    <div id="demo">
+
+    </div>
+    <script type="text/babel">
+        function SayHi(prams) {
+            return <h2 style={{color:'#96b97d'}}>Hi!!!</h2>;
+        }
+        const element = <SayHi />;
+        ReactDOM.render(
+            element,
+            document.getElementById("demo")
+        )
+    </script>
+</body>
+</html>
+<script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+<script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+<!-- 生产环境中不建议使用 -->
+<script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>

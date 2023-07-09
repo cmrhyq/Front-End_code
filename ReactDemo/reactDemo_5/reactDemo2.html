@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Props验证-1</title>
+</head>
+<body>
+<div id="demo">
+
+</div>
+<script type="text/babel">
+    var name = 'Alan';
+    var ip = returnCitySN.cip;
+
+    class MyIp extends React.Component {
+        render() {
+            return (
+                <p>{this.props.name} your ip is, {this.props.ip}</p>
+            );
+        }
+    }
+
+    MyIp.propTypes = {
+        name: PropTypes.string,
+        ip: PropTypes.string
+    };
+
+    ReactDOM.render(
+        <MyIp name={name} ip={ip}/>,
+        document.getElementById("demo")
+    )
+</script>
+
+</body>
+</html>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script src="https://cdn.bootcss.com/prop-types/15.6.1/prop-types.js"></script>
+<script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+<script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+<!-- 生产环境中不建议使用 -->
+<script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>

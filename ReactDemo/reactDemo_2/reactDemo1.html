@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>更新式元素渲染</title>
+</head>
+<body>
+    <div id="demo">
+        
+    </div>
+    <script type="text/babel">
+        function Time() {
+            const element = (
+                <div>
+                    <h2>Say Hi</h2>
+                    <h3>Now Time is {new Date().toLocaleTimeString()}</h3>
+                </div>
+            );
+            ReactDOM.render(
+                element,
+                document.getElementById("demo")
+            )
+        }
+        setInterval(Time,1000);
+    </script>
+</body>
+</html>
+<script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+<script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+<!-- 生产环境中不建议使用 -->
+<script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>

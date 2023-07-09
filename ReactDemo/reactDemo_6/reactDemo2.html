@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>向事件处理程序传参</title>
+</head>
+<body>
+<div id="demo">
+
+</div>
+<script type="text/babel">
+    class Proper extends React.Component{
+        constructor(){
+            super();
+            this.state = {name:'Say Hi!'};
+        }
+
+        preventPop(name,e){
+            e.preventDefault();
+            alert(name);
+        }
+
+        render() {
+            return (
+                <div>
+                    <p>Alan</p>
+                    <a href="reactDemo.html" onClick={this.preventPop.bind(this,this.state.name)}>Click</a>
+                </div>
+            );
+        }
+    }
+
+    ReactDOM.render(
+        <Proper/>,
+        document.getElementById("demo")
+    )
+</script>
+
+</body>
+</html>
+<script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+<script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+<!-- 生产环境中不建议使用 -->
+<script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
