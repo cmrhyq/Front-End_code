@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>throttle</title>
+</head>
+<body>
+<div class="container">
+    <h3>打开F12</h3>
+    <button onclick="throttleTask()">节流测试</button>
+</div>
+</body>
+</html>
+<script>
+    /**
+     * 什么是节流：一个函数执行一次后，在只有大于设定的执行周期后才执行第二次，假设有个需要频繁触发的函数，处于性能优化角度，在规定的时间内，只让函数的第一次生效，后面的不生效，大于设定时间后，再生效。
+     * 相当于给一个函数加上一个冷却时间
+     * 节流使用场景：上拉加载，滚动条，等等
+     * @param fn
+     * @param delay
+     * @returns {(function(...[*]): void)|*}
+     */
+    function throttle(fn, delay) {
+        let last = 0;
+        return function (...args) {
+            const now = Date.now()
+            if (now - last > delay) {
+                last = now;
+                fn.apply(this, args)
+            }
+        }
+    }
+
+    function task() {
+        console.log('run task')
+    }
+
+    const throttleTask = throttle(task, 10000)
+    window.addEventListener('scroll', throttleTask)
+</script>

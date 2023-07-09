@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>debounce</title>
+</head>
+<body>
+<div class="container">
+    <h3>打开F12</h3>
+    <button onclick="debounceTask()">防抖测试</button>
+</div>
+</body>
+</html>
+<script>
+    /**
+     * 什么是防抖：防抖阻止事件的多次调用，规定时间内只执行一次
+     * 防抖解决什么问题：假设一个用户高频点击一个按钮，点击按钮后会向后台发送请求，
+     * 如果不使用防抖，就会发送许多重复的Ajax请求，造成服务器压力。使用防抖后，
+     * 规定时间内，只会发送一次Ajax请求，可以有效地减缓服务器的压力。
+     * @param fn 方法名
+     * @param delay 时间
+     * @returns {(function(...[*]): void)|*}
+     */
+    function debounce(fn, delay) {
+        let timer;
+        return function (...args) {
+            if (timer) {
+                clearTimeout(timer)
+            }
+            timer = setTimeout(() => {
+                fn.apply(this, args)
+            }, delay)
+        }
+    }
+
+    function task() {
+        console.log("run task")
+    }
+
+    const debounceTask = debounce(task, 10000)
+    window.addEventListener('scroll', debounceTask)
+</script>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+<meta charset="UTF-8">
+<title>I Love You</title>
+</head>
+<body>
+    <h1>Open the console</h1>
+</body>
+</html>
+<script type="text/javascript" src="./Base64.js"></script>
+<script>
+window.onload = function (){
+    var encode = Base64.encode('testaaaa')
+    console.log(encode)
+    var decode = Base64.decode(encode)
+    console.log(decode)
+    var utf8Encode = Base64._utf8_encode('testaaaa')
+    console.log(utf8Encode)
+    var utf8Decode = Base64._utf8_decode(utf8Encode)
+    console.log(utf8Decode)
+}
+</script>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="button" value="按钮" onclick="windowsTips('测试消息','测试消息类型','D:\\GitHub\\WebsiteCooperationWarehouse\\003_dev\\01_front_end_engineering\\0302_code_mall_front_desk\\src\\static\\img\\404.png')">
+</body>
+</html>
+<script>
+    /**
+     * 向windows发送弹窗提示
+     * 注：图片url不能为本地文件地址
+     * @param msg
+     * @param msgType
+     * @param img
+     */
+    function windowsTips(msg,msgType,img){
+        Notification.requestPermission(function() {
+            if(Notification.permission === 'granted') {
+                // 用户点击了允许
+                let n = new Notification(msg, {
+                    body: msgType,
+                    icon: img
+                })
+                setTimeout(() => {
+                    n.close();
+                }, 3000)
+                n.onclick = function(e) {
+                    window.open("https://www.baidu.com")
+                    console.log(1, e);
+                }
+                n.onerror = function(e) {
+                    console.log(2, e);
+                }
+                n.onshow = function(e) {
+                    console.log(3, e);
+                }
+                n.onclose = function(e) {
+                    console.log(4, e);
+                }
+            }else if(Notification.permission === 'denied') {
+                // 用户点击了拒绝
+                alert("拒绝")
+            }else {
+                // 用户没有做决定
+                alert("未决定")
+            }
+        })
+    }
+</script>

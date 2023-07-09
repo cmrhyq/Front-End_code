@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-model="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>元素抖动</title>
+    <style>
+        @keyframes shake {
+            10%,
+            90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+
+            20%,
+            80% {
+                transform: translate3d(2px, 0, 0);
+            }
+
+            30%,
+            50%,
+            70% {
+                transform: translate3d(-4px, 0, 0);
+            }
+
+            40%,
+            60% {
+                transform: translate3d(4px, 0, 0);
+            }
+        }
+
+        .apply-shake {
+            animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <input type="text" v-model="name" :class="{'apply-shake': shakeTxtName}"/>
+    <button @click="submit">提交</button>
+</div>
+</body>
+</html>
+<script src="./vue.js" type="text/javascript"></script>
+<script>
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                name: "",
+                shakeTxtName: false,
+            }
+        },
+        mounted() {
+
+        },
+        methods: {
+            // 定时器设置的秒数等于css中shake设置的秒数
+            submit() {
+                if (this.name === '') {
+                    this.shakeTxtName = true;
+                    setTimeout(() => {
+                        this.shakeTxtName = false;
+                    }, 820)
+                }
+            }
+        }
+    })
+</script>

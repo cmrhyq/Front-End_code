@@ -1,0 +1,43 @@
+<html>
+
+<head>
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        请输入关键字：<input type="text">
+        <ul></ul>
+    </div>
+    <script>
+        window.onload = function () {
+          new Vue({
+            el: '#app',
+            data: {
+              keyword: '',
+              result: ''
+            },
+            methods: {
+              sendJsonP(keyword) {
+                let url = 'https://www.baidu.com/sugrec?pre=1&p=3&ie=utf-8&json=1&prod=pc&from=pc_web';
+                this.$http.jsonp(url, {
+                  params: {
+                    wd: keyword
+                  },
+                  jsonp: 'cb'//jsonp默认是callback,百度缩写成了cb，所以需要指定下                     }
+                }).then(res => {
+                  if (res.data.g) {
+                    this.result = res.data.g.map(x => x['q']);
+                  } else {
+                    this.result = [];
+                  }
+                });
+              }
+            }
+          });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+<html>
+<head>
+    <title>network test</title>
+    <meta charset="utf-8">
+</head>
+<body>
+<h2>open the console</h2>
+</body>
+</html>
+<script>
+    window.onload = function () {
+        onConnectionChange();
+    }
+
+    function onConnectionChange() {
+        console.log(navigator)
+        console.log('网络连接类型：', navigator.connection.effectiveType);
+        console.log('预估下行速度：', navigator.connection.downlink, 'MB/s');
+        console.log('预估往返时间：', navigator.connection.rtt, 'ms');
+        console.log('打开/请求数据保护模式：', navigator.connection.saveData);
+    }
+    window.addEventListener('change', onConnectionChange);
+</script>
