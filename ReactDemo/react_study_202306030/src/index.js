@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDom from "react-dom";
-import Table from "./components/table";
+import Nested from "./components/nested";
 
 ReactDom.render(
-    <Table/>,
+    <Nested/>,
     document.getElementById("root")
 )
