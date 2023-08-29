@@ -1,7 +1,7 @@
 import React from "react";
 import Table from "./table";
 import Functional from "./functional";
-import Style from "./Style";
+import Style from "./style";
 
 const TabBar = () => {
     return <div>
