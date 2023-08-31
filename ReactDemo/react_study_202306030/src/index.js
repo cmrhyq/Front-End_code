@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from 'react-dom/client'
 // import EventFirst from "./components/eventFirst";
-import EventSecond from "./components/2.event/eventSecond";
 import EventThird from "./components/2.event/eventThird";
 
 // ReactDom.render(
