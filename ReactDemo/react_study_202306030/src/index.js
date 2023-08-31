@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from 'react-dom/client'
-// import EventFirst from "./components/eventFirst";
-import EventThird from "./components/2.event/eventThird";
+import Ref from "./components/3.ref/ref";
 
 // ReactDom.render(
 //     <EventFirst/>,
@@ -17,6 +16,6 @@ import EventThird from "./components/2.event/eventThird";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <EventThird/>
+        <Ref/>
     </React.StrictMode>
 )
