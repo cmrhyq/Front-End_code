@@ -17,6 +17,12 @@ export default class EventFirst extends React.Component {
 
                     {/* 事件绑定方法3 */}
                     <button onClick={this.handleClick2}>Add</button>
+
+                    {/* 事件绑定方法4 */}
+                    <button onClick={() => {
+                        this.handleClick3()
+                    }}>Add
+                    </button>
                 </div>
             </div>
         )
@@ -27,6 +33,10 @@ export default class EventFirst extends React.Component {
     // }
 
     handleClick2 = () => {
+        console.log("text")
+    }
+
+    handleClick3() {
         console.log("text")
     }
 }
