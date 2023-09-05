@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from 'react-dom/client'
-import State from "./components/state/state";
+import 'tdesign-react/es/style/index.css';
+import ToDoList from "./components/6.case/toDoList";
 
 // ReactDom.render(
 //     <EventFirst/>,
@@ -16,6 +17,6 @@ import State from "./components/state/state";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <State/>
+        <ToDoList/>
     </React.StrictMode>
 )
