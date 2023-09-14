@@ -1,7 +1,8 @@
 /**
  * 创建一个名为IndexedDBHelper的库
- * @type
- * {{addItem: (function(*, *): Promise<unknown>),
+ * @type {{
+ * addItem: (function(*, *): Promise<unknown>),
+ * createTable: (function(*, null=, null=): Promise<unknown>),
  * getAllItem: (function(*): Promise<unknown>),
  * getItemById: (function(*, *): Promise<unknown>),
  * openDB: (function(): Promise<unknown>)}}
@@ -149,7 +150,9 @@ export let IndexedDBHelper = (function () {
         })
     }
 
-    // 导出公共接口
+    /**
+     * 导出公共接口
+     */
     return {
         openDB: openDB,
         addItem: addItem,
