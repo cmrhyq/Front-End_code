@@ -10,7 +10,7 @@ class ToDoList extends Component {
         this.state = {
             list: []
         }
-        this.loadDb();
+        this.loadData();
     }
 
     render() {
@@ -48,7 +48,7 @@ class ToDoList extends Component {
                                         {index + 1}
                                     </td>
                                     <td>
-                                        {item}
+                                        {item.name}
                                     </td>
                                     <td>
                                         <button className='common-button' onClick={this.deleteContent}>Delete</button>
@@ -65,6 +65,7 @@ class ToDoList extends Component {
 
     addContent = (event) => {
         try {
+            let that = this;
             let content = this.ref.current.value
             if (content.trim() !== '') {
                 // 不建议，因为会直接修改状态，会造成不可预期的问题
@@ -76,19 +77,14 @@ class ToDoList extends Component {
                 // 创建一个新的list，并赋值
                 // 数组的深复制，可以用 ...{对象}  或者  {对象}.slice()
                 // let newList = [...this.state.list]
-                let newList = this.state.list.slice()
-                newList.push(content)
-                this.setState({
-                    list: newList
-                })
+                // let newList = this.state.list.slice()
+                // newList.push(content)
+                // this.setState({
+                //     list: newList
+                // })
 
                 IndexedDBHelper.addItem('user', {name: content}).then(function (response) {
-                    console.log(response);
-                    IndexedDBHelper.getAllItem('user').then(function (response){
-                        console.log(response)
-                    }).catch(function (error) {
-                        console.error(error);
-                    })
+                    that.loadData()
                 }).catch(function (error) {
                     console.error(error);
                 });
@@ -105,12 +101,18 @@ class ToDoList extends Component {
         console.log(event)
     }
 
-    loadDb = (event) => {
+    loadData = (event) => {
+        let that = this;
         let object = 'user'
-        IndexedDBHelper.openDB().then(function (response) {
-            IndexedDBHelper.createTable(object, 'name', false).then(function (response) {
-                console.log(response);
-            }).catch(function (error) {
+        IndexedDBHelper.openDB(object, 'name', false).then(function (response) {
+            IndexedDBHelper.getAllItem(object).then((response) => {
+                console.log(response)
+                if (response){
+                    that.setState({
+                        list: response
+                    })
+                }
+            }).catch((error)=>{
                 console.error(error);
             })
         }).catch(function (error) {

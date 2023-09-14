@@ -5,7 +5,7 @@
  * createTable: (function(*, null=, null=): Promise<unknown>),
  * getAllItem: (function(*): Promise<unknown>),
  * getItemById: (function(*, *): Promise<unknown>),
- * openDB: (function(): Promise<unknown>)}}
+ * openDB: (function(*, *, *): Promise<unknown>)}}
  */
 export let IndexedDBHelper = (function () {
     // 定义数据库名称和版本
@@ -17,7 +17,7 @@ export let IndexedDBHelper = (function () {
      * 打开IndexedDB数据库
      * @returns {Promise<unknown>}
      */
-    function openDB() {
+    function openDB(object, index = null, indexUnique = null) {
         return new Promise(function (resolve, reject) {
             let request = indexedDB.open(dbName, dbVersion);
 
@@ -32,7 +32,26 @@ export let IndexedDBHelper = (function () {
 
             request.onupgradeneeded = function (event) {
                 db = event.target.result;
-                resolve("对象存储空间已创建")
+                // 在此处创建或升级对象存储空间
+                // keyPath=主键, autoIncrement=是否自增
+                let objectStore = db.createObjectStore(object, {
+                    keyPath: "id",
+                    autoIncrement: true
+                });
+                if (index) {
+                    objectStore.createIndex(index, index, {
+                        unique: indexUnique
+                    });
+                }
+
+                objectStore.onerror = function (event) {
+                    reject("对象存储空间创建失败");
+                };
+
+                objectStore.onsuccess = function (event) {
+                    db = event.target.result;
+                    resolve("对象存储空间已创建")
+                };
             };
         });
     }
@@ -86,12 +105,10 @@ export let IndexedDBHelper = (function () {
             let request = objectStore.add(item);
 
             request.onsuccess = function (event) {
-                console.log(event)
                 resolve("数据已添加");
             };
 
             request.onerror = function (event) {
-                console.log(event)
                 reject("无法添加数据");
             };
         });
