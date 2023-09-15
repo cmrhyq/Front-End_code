@@ -1,11 +1,15 @@
 /**
  * 创建一个名为IndexedDBHelper的库
  * @type {{
+ * closeDB: closeDB,
  * addItem: (function(*, *): Promise<unknown>),
  * createTable: (function(*, null=, null=): Promise<unknown>),
+ * deleteObject: ((function(*): (*|undefined))|*),
  * getAllItem: (function(*): Promise<unknown>),
+ * deleteItemById: (function(*, *): Promise<unknown>),
  * getItemById: (function(*, *): Promise<unknown>),
- * openDB: (function(*, *, *): Promise<unknown>)}}
+ * openDB: (function(*, null=, null=): Promise<unknown>)
+ * }}
  */
 export let IndexedDBHelper = (function () {
     // 定义数据库名称和版本
@@ -17,7 +21,7 @@ export let IndexedDBHelper = (function () {
      * 打开IndexedDB数据库
      * @returns {Promise<unknown>}
      */
-    function openDB(object, index = null, indexUnique = null) {
+    function openDB(tableName, index = null, indexUnique = null) {
         return new Promise(function (resolve, reject) {
             let request = indexedDB.open(dbName, dbVersion);
 
@@ -34,7 +38,7 @@ export let IndexedDBHelper = (function () {
                 db = event.target.result;
                 // 在此处创建或升级对象存储空间
                 // keyPath=主键, autoIncrement=是否自增
-                let objectStore = db.createObjectStore(object, {
+                let objectStore = db.createObjectStore(tableName, {
                     keyPath: "id",
                     autoIncrement: true
                 });
@@ -58,17 +62,17 @@ export let IndexedDBHelper = (function () {
 
     /**
      * 创建对象存储空间
-     * @param object table name
+     * @param tableName table name
      * @param index index name
      * @param indexUnique Is the index unique?
      * @returns {Promise<unknown>}
      */
-    function createTable(object, index = null, indexUnique = null) {
+    function createTable(tableName, index = null, indexUnique = null) {
         return new Promise(function (resolve, reject) {
-            if (!db.objectStoreNames.contains(object)) {
+            if (!db.objectStoreNames.contains(tableName)) {
                 // 在此处创建或升级对象存储空间
                 // keyPath=主键, autoIncrement=是否自增
-                let objectStore = db.createObjectStore(object, {
+                let objectStore = db.createObjectStore(tableName, {
                     keyPath: "id",
                     autoIncrement: true
                 });
@@ -94,15 +98,15 @@ export let IndexedDBHelper = (function () {
 
     /**
      * 添加数据到对象存储空间，
-     * @param object object name
-     * @param item object content
+     * @param tableName table name
+     * @param data data content
      * @returns {Promise<unknown>}
      */
-    function addItem(object, item) {
+    function addData(tableName, data) {
         return new Promise(function (resolve, reject) {
-            let transaction = db.transaction([object], "readwrite");
-            let objectStore = transaction.objectStore(object);
-            let request = objectStore.add(item);
+            let transaction = db.transaction([tableName], "readwrite");
+            let objectStore = transaction.objectStore(tableName);
+            let request = objectStore.add(data);
 
             request.onsuccess = function (event) {
                 resolve("数据已添加");
@@ -114,16 +118,66 @@ export let IndexedDBHelper = (function () {
         });
     }
 
+    function updateData() {
+
+    }
+
+    /**
+     * 根据id删除数据
+     * @param tableName
+     * @param id
+     * @returns {Promise<unknown>}
+     */
+    function deleteDataById(tableName, id) {
+        return new Promise(function (resolve, reject) {
+            let transaction = db.transaction([tableName], 'readwrite');
+            let objectStore = transaction.objectStore(tableName);
+            let request = objectStore.openCursor();
+
+            request.onsuccess = function (event) {
+                let cursor = event.target.result;
+                if (cursor) {
+                    // 因为 cursor.key 的值是数字类型的，而 id 的值是字符类型的
+                    // 所以不能用三个等号的严格相等，得用两个等号的宽松相等
+                    // 具体参考：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Equality_comparisons_and_sameness
+                    if (cursor.key == id) {
+                        cursor.delete()
+                        resolve("删除成功")
+                    }
+                    cursor.continue();
+                } else {
+                    reject("没有更多数据")
+                }
+            }
+        })
+    }
+
+    /**
+     * 删除对象存储空间
+     * @param tableName 对象存储空间名
+     */
+    function deleteTable(tableName) {
+        if (tableName) {
+            if (db.objectStoreNames.contains(tableName)) {
+                return db.deleteObjectStore(tableName)
+            } else {
+                console.log("数据表不存在")
+            }
+        } else {
+            console.log("数据表名为空")
+        }
+    }
+
     /**
      * 从对象存储空间获取数据
-     * @param object object name
+     * @param tableName table name
      * @param id data id
      * @returns {Promise<unknown>}
      */
-    function getItemById(object, id) {
+    function getDataById(tableName, id) {
         return new Promise(function (resolve, reject) {
-            let transaction = db.transaction([object], "readonly");
-            let objectStore = transaction.objectStore(object);
+            let transaction = db.transaction([tableName], "readonly");
+            let objectStore = transaction.objectStore(tableName);
             let request = objectStore.get(id);
 
             request.onsuccess = function (event) {
@@ -143,13 +197,13 @@ export let IndexedDBHelper = (function () {
 
     /**
      * 从对象存储空间获取所有数据
-     * @param object object name
+     * @param tableName table name
      * @returns {Promise<unknown>}
      */
-    function getAllItem(object) {
+    function getAllData(tableName) {
         return new Promise(function (resolve, reject) {
-            let transaction = db.transaction([object], "readonly");
-            let objectStore = transaction.objectStore(object);
+            let transaction = db.transaction([tableName], "readonly");
+            let objectStore = transaction.objectStore(tableName);
             let request = objectStore.getAll()
 
             request.onsuccess = function (event) {
@@ -168,14 +222,27 @@ export let IndexedDBHelper = (function () {
     }
 
     /**
+     * @CreatedTime：2019/06/20 17:58:27
+     * @params：{db:indexedDB对象}
+     * @Description：关闭数据库
+     */
+    function closeDB() {
+        db.close();
+    }
+
+    /**
      * 导出公共接口
      */
     return {
         openDB: openDB,
-        addItem: addItem,
-        getItemById: getItemById,
-        getAllItem: getAllItem,
-        createTable: createTable
+        addItem: addData,
+        deleteItemById: deleteDataById,
+        deleteObject: deleteTable,
+        updateData: updateData,
+        getItemById: getDataById,
+        getAllItem: getAllData,
+        createTable: createTable,
+        closeDB: closeDB
     };
 })();
 

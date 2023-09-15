@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import '../../resource/css/toDoList.css'
 import {IndexedDBHelper} from "../../resource/js/indexedDb";
 
-class ToDoList extends Component {
+class IndexedDb extends Component {
     ref = React.createRef()
 
     constructor() {
@@ -44,10 +44,10 @@ class ToDoList extends Component {
                             this.state.list.map((item, index) =>
                                 <tr key={index}>
                                     <td>
-                                        {index + 1}
+                                        {item.id}
                                     </td>
                                     <td>
-                                        {item}
+                                        {item.name}
                                     </td>
                                     <td>
                                         <button className='common-button' id={item.id}
@@ -85,11 +85,17 @@ class ToDoList extends Component {
                 // 创建一个新的list，并赋值
                 // 数组的深复制，可以用 ...{对象}  或者  {对象}.slice()
                 // let newList = [...this.state.list]
-                let newList = this.state.list.slice()
-                newList.push(content)
-                this.setState({
-                    list: newList
-                })
+                // let newList = this.state.list.slice()
+                // newList.push(content)
+                // this.setState({
+                //     list: newList
+                // })
+
+                IndexedDBHelper.addItem('user', {name: content}).then(function (response) {
+                    that.loadData()
+                }).catch(function (error) {
+                    console.error(error);
+                });
             } else {
                 console.log("The input content is empty")
             }
@@ -100,8 +106,44 @@ class ToDoList extends Component {
     }
 
     deleteContent = (event) => {
+        let id = event.target.id;
+        let that = this;
+        let object = 'user';
+        IndexedDBHelper.deleteItemById(object, id).then((response) => {
+            console.log(response)
+            that.loadData()
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
 
+    loadData = (event) => {
+        let that = this;
+        let object = 'user';
+        // 跟踪组件是否已挂载
+        let isMounted = true;
+        IndexedDBHelper.openDB(object, 'name', false).then((response) => {
+            IndexedDBHelper.getAllItem(object).then((response) => {
+                // 检查组件是否任然挂载
+                if (isMounted) {
+                    if (response) {
+                        that.setState({
+                            list: response
+                        })
+                    }
+                }
+            }).catch((error) => {
+                console.error(error);
+            })
+        }).catch((error) => {
+            console.error(error);
+        });
+
+        // 添加 componentWillUnmount 函数，在组件卸载时将标志设置为false，以访潜在的内存泄漏
+        return () => {
+            isMounted = false;
+        }
     }
 }
 
-export default ToDoList
+export default IndexedDb

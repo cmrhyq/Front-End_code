@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from 'react-dom/client'
 import 'tdesign-react/es/style/index.css';
 import ToDoList from "./components/6.case/toDoList";
+import IndexedDb from "./components/6.case/indexedDb";
 
 // ReactDom.render(
 //     <EventFirst/>,
@@ -17,6 +18,6 @@ import ToDoList from "./components/6.case/toDoList";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <ToDoList/>
+        <IndexedDb/>
     </React.StrictMode>
 )
