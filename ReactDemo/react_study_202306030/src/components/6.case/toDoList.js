@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import '../../resource/css/toDoList.css'
-import {IndexedDBHelper} from "../../resource/js/indexedDb";
 
 class ToDoList extends Component {
     ref = React.createRef()
@@ -73,7 +72,6 @@ class ToDoList extends Component {
 
     addContent = (event) => {
         try {
-            let that = this;
             let content = this.ref.current.value
             if (content.trim() !== '') {
                 // 不建议，因为会直接修改状态，会造成不可预期的问题
