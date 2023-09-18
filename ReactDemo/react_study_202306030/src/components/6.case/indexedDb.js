@@ -20,11 +20,6 @@ class IndexedDb extends Component {
                     <button className='common-button' onClick={this.addContent}>Add</button>
                 </div>
                 <div className='content-box'>
-                    {/*<ul>*/}
-                    {/*    {*/}
-                    {/*        this.state.list.map((item, index) => <li key={index}>{item}</li>)*/}
-                    {/*    }*/}
-                    {/*</ul>*/}
                     <table>
                         <thead>
                         <tr>
@@ -68,7 +63,17 @@ class IndexedDb extends Component {
      *在组件加载完成后执行你的方法
      */
     componentDidMount() {
-        this.loadData();
+        this.queryData();
+    }
+
+    updateContent = (event) => {
+        let that = this;
+        IndexedDBHelper.updateData('user', {id: 2, name: "aaa"}).then((response) => {
+            console.log(response)
+            that.queryData()
+        }).catch(function (error) {
+            console.error(error);
+        })
     }
 
     addContent = (event) => {
@@ -76,8 +81,8 @@ class IndexedDb extends Component {
             let that = this;
             let content = this.ref.current.value
             if (content.trim() !== '') {
-                IndexedDBHelper.addItem('user', {name: content}).then(function (response) {
-                    that.loadData()
+                IndexedDBHelper.addItem('user', {name: content}).then((response) => {
+                    that.queryData()
                 }).catch(function (error) {
                     console.error(error);
                 });
@@ -96,13 +101,13 @@ class IndexedDb extends Component {
         let object = 'user';
         IndexedDBHelper.deleteItemById(object, id).then((response) => {
             console.log(response)
-            that.loadData()
+            that.queryData()
         }).catch((error) => {
             console.log(error)
         })
     }
 
-    loadData = (event) => {
+    queryData = (event) => {
         let that = this;
         let object = 'user';
         // 跟踪组件是否已挂载

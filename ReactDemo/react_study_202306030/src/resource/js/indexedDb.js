@@ -10,6 +10,12 @@
  * getItemById: (function(*, *): Promise<unknown>),
  * openDB: (function(*, null=, null=): Promise<unknown>)
  * }}
+ * 使用示例：
+ * IndexedDBHelper.openDB().then(function (message) {
+ *     console.log(message);
+ * }).catch(function (error) {
+ *     console.error(error);
+ * });
  */
 export let IndexedDBHelper = (function () {
     // 定义数据库名称和版本
@@ -120,16 +126,23 @@ export let IndexedDBHelper = (function () {
 
     /**
      * 根据id更新数据
+     * 如果数据库中他的键值存在了，那就是修改，反之就是新增
      * @param tableName table name
-     * @param id id
-     * @param newData new data
+     * @param newData new data {id,name}
      */
-    function updateData(tableName, id, newData) {
+    function updateData(tableName, newData) {
         return new Promise(function (resolve, reject) {
             let transaction = db.transaction([tableName], 'readwrite');
-            let objectStore = transaction.objectStore(tableName);
+            let request = transaction.objectStore(tableName);
+            request.put(newData)
 
-            
+            request.onsuccess = function (event) {
+                resolve("数据更新");
+            };
+
+            request.onerror = function (event) {
+                reject("无法更新数据");
+            };
 
         })
     }
@@ -257,23 +270,3 @@ export let IndexedDBHelper = (function () {
         closeDB: closeDB
     };
 })();
-
-// 使用示例：
-// IndexedDBHelper.openDB().then(function (message) {
-//     console.log(message);
-//
-//     let newItem = { id: 1, name: "示例项" };
-//     IndexedDBHelper.addItem(newItem).then(function (message) {
-//         console.log(message);
-//
-//         IndexedDBHelper.getItemById(1).then(function (item) {
-//             console.log("获取的项：", item);
-//         }).catch(function (error) {
-//             console.error(error);
-//         });
-//     }).catch(function (error) {
-//         console.error(error);
-//     });
-// }).catch(function (error) {
-//     console.error(error);
-// });
