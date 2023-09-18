@@ -63,13 +63,6 @@ class ToDoList extends Component {
         );
     }
 
-    /**
-     *在组件加载完成后执行你的方法
-     */
-    componentDidMount() {
-        this.loadData();
-    }
-
     addContent = (event) => {
         try {
             let content = this.ref.current.value

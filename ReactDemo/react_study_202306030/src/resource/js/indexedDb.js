@@ -118,8 +118,20 @@ export let IndexedDBHelper = (function () {
         });
     }
 
-    function updateData() {
+    /**
+     * 根据id更新数据
+     * @param tableName table name
+     * @param id id
+     * @param newData new data
+     */
+    function updateData(tableName, id, newData) {
+        return new Promise(function (resolve, reject) {
+            let transaction = db.transaction([tableName], 'readwrite');
+            let objectStore = transaction.objectStore(tableName);
 
+            
+
+        })
     }
 
     /**

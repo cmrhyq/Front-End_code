@@ -76,21 +76,6 @@ class IndexedDb extends Component {
             let that = this;
             let content = this.ref.current.value
             if (content.trim() !== '') {
-                // 不建议，因为会直接修改状态，会造成不可预期的问题
-                // this.data.list.push(content)
-                // this.setState({
-                //     list: this.data.list
-                // })
-
-                // 创建一个新的list，并赋值
-                // 数组的深复制，可以用 ...{对象}  或者  {对象}.slice()
-                // let newList = [...this.state.list]
-                // let newList = this.state.list.slice()
-                // newList.push(content)
-                // this.setState({
-                //     list: newList
-                // })
-
                 IndexedDBHelper.addItem('user', {name: content}).then(function (response) {
                     that.loadData()
                 }).catch(function (error) {
