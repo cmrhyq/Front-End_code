@@ -2,13 +2,14 @@
  * 创建一个名为IndexedDBHelper的库
  * @type {{
  * closeDB: closeDB,
- * addItem: (function(*, *): Promise<unknown>),
- * createTable: (function(*, null=, null=): Promise<unknown>),
- * deleteObject: ((function(*): (*|undefined))|*),
- * getAllItem: (function(*): Promise<unknown>),
- * deleteItemById: (function(*, *): Promise<unknown>),
- * getItemById: (function(*, *): Promise<unknown>),
- * openDB: (function(*, null=, null=): Promise<unknown>)
+ * getAllData: (function(string): Promise<unknown>),
+ * createTable: (function(string, string=, string=): Promise<unknown>),
+ * updateData: (function(string, *): Promise<unknown>),
+ * getDataById: (function(string, number): Promise<unknown>),
+ * addData: (function(string, *): Promise<unknown>),
+ * openDB: (function(string, string=, string=): Promise<unknown>),
+ * deleteDataById: (function(string, number): Promise<unknown>),
+ * deleteTable: ((function(string): string)|*)
  * }}
  * 使用示例：
  * IndexedDBHelper.openDB().then(function (message) {
@@ -27,7 +28,7 @@ export let IndexedDBHelper = (function () {
      * 打开IndexedDB数据库
      * @returns {Promise<unknown>}
      */
-    function openDB(tableName, index = null, indexUnique = null) {
+    function openDB(tableName: string, index: string = null, indexUnique: string = null) {
         return new Promise(function (resolve, reject) {
             let request = indexedDB.open(dbName, dbVersion);
 
@@ -73,7 +74,7 @@ export let IndexedDBHelper = (function () {
      * @param indexUnique Is the index unique?
      * @returns {Promise<unknown>}
      */
-    function createTable(tableName, index = null, indexUnique = null) {
+    function createTable(tableName: string, index: string = null, indexUnique: string = null) {
         return new Promise(function (resolve, reject) {
             if (!db.objectStoreNames.contains(tableName)) {
                 // 在此处创建或升级对象存储空间
@@ -108,7 +109,7 @@ export let IndexedDBHelper = (function () {
      * @param data data content
      * @returns {Promise<unknown>}
      */
-    function addData(tableName, data) {
+    function addData(tableName: string, data: any) {
         return new Promise(function (resolve, reject) {
             let transaction = db.transaction([tableName], "readwrite");
             let objectStore = transaction.objectStore(tableName);
@@ -130,7 +131,7 @@ export let IndexedDBHelper = (function () {
      * @param tableName table name
      * @param newData new data {id,name}
      */
-    function updateData(tableName, newData) {
+    function updateData(tableName: string, newData: any) {
         return new Promise(function (resolve, reject) {
             let transaction = db.transaction([tableName], 'readwrite');
             let request = transaction.objectStore(tableName);
@@ -153,7 +154,8 @@ export let IndexedDBHelper = (function () {
      * @param id
      * @returns {Promise<unknown>}
      */
-    function deleteDataById(tableName, id) {
+    function deleteDataById(tableName: string, id: number) {
+        console.log(id)
         return new Promise(function (resolve, reject) {
             let transaction = db.transaction([tableName], 'readwrite');
             let objectStore = transaction.objectStore(tableName);
@@ -165,7 +167,7 @@ export let IndexedDBHelper = (function () {
                     // 因为 cursor.key 的值是数字类型的，而 id 的值是字符类型的
                     // 所以不能用三个等号的严格相等，得用两个等号的宽松相等
                     // 具体参考：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Equality_comparisons_and_sameness
-                    if (cursor.key == id) {
+                    if (cursor.key === id) {
                         cursor.delete()
                         resolve("删除成功")
                     }
@@ -181,7 +183,7 @@ export let IndexedDBHelper = (function () {
      * 删除对象存储空间
      * @param tableName 对象存储空间名
      */
-    function deleteTable(tableName) {
+    function deleteTable(tableName: string): string {
         if (tableName) {
             if (db.objectStoreNames.contains(tableName)) {
                 return db.deleteObjectStore(tableName)
@@ -199,7 +201,7 @@ export let IndexedDBHelper = (function () {
      * @param id data id
      * @returns {Promise<unknown>}
      */
-    function getDataById(tableName, id) {
+    function getDataById(tableName: string, id: number) {
         return new Promise(function (resolve, reject) {
             let transaction = db.transaction([tableName], "readonly");
             let objectStore = transaction.objectStore(tableName);
@@ -225,7 +227,7 @@ export let IndexedDBHelper = (function () {
      * @param tableName table name
      * @returns {Promise<unknown>}
      */
-    function getAllData(tableName) {
+    function getAllData(tableName: string) {
         return new Promise(function (resolve, reject) {
             let transaction = db.transaction([tableName], "readonly");
             let objectStore = transaction.objectStore(tableName);
@@ -260,12 +262,12 @@ export let IndexedDBHelper = (function () {
      */
     return {
         openDB: openDB,
-        addItem: addData,
-        deleteItemById: deleteDataById,
-        deleteObject: deleteTable,
+        addData: addData,
+        deleteDataById: deleteDataById,
+        deleteTable: deleteTable,
         updateData: updateData,
-        getItemById: getDataById,
-        getAllItem: getAllData,
+        getDataById: getDataById,
+        getAllData: getAllData,
         createTable: createTable,
         closeDB: closeDB
     };

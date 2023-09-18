@@ -81,7 +81,7 @@ class IndexedDb extends Component {
             let that = this;
             let content = this.ref.current.value
             if (content.trim() !== '') {
-                IndexedDBHelper.addItem('user', {name: content}).then((response) => {
+                IndexedDBHelper.addData('user', {name: content}).then((response) => {
                     that.queryData()
                 }).catch(function (error) {
                     console.error(error);
@@ -99,7 +99,7 @@ class IndexedDb extends Component {
         let id = event.target.id;
         let that = this;
         let object = 'user';
-        IndexedDBHelper.deleteItemById(object, id).then((response) => {
+        IndexedDBHelper.deleteDataById(object, id).then((response) => {
             console.log(response)
             that.queryData()
         }).catch((error) => {
@@ -113,7 +113,7 @@ class IndexedDb extends Component {
         // 跟踪组件是否已挂载
         let isMounted = true;
         IndexedDBHelper.openDB(object, 'name', false).then((response) => {
-            IndexedDBHelper.getAllItem(object).then((response) => {
+            IndexedDBHelper.getAllData(object).then((response) => {
                 // 检查组件是否任然挂载
                 if (isMounted) {
                     if (response) {
