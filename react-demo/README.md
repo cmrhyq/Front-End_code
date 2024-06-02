@@ -1,70 +1,126 @@
-# Getting Started with Create React App
+# React 学习 demo
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 钩子 hooks
+```js
+import {useState} from "react";
 
-## Available Scripts
+export default function Input(){
+    // 状态变量inputText 和setText 方法用于设置当前键入的文本。useState 钩子在组件开始时初始化。
+    // 默认情况下，inputText 将设置为 "hello"。
+    const [inputText, setInputText] = useState('hello');
 
-In the project directory, you can run:
+    // 当用户键入时，handleChange 函数，会从浏览器的输入 DOM 元素中读取最新的输入值，并调用setText 函数，更新inputText 的本地状态。
+    function handleChange(e){
+        setInputText(e.target.value);
+    }
 
-### `npm start`
+    return (
+        <div>
+            <input value={inputText} onChange={handleChange} />
+            <p>You typed: {inputText}</p>
+            <button onClick={() => setInputText('hello')}>
+                Reset
+            </button>
+        </div>
+    )
+}
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
+钩子还附带了一系列规则，您在使用它们时需要遵守。这适用于所有 React 挂钩，包括您刚刚学习的useState 挂钩。
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 您只能在组件的顶层或您自己的钩子中调用钩子。
+- 您不能在 Loop 或条件中调用钩子。
+- 只能在 React 函数中调用钩子，而不能在 Regular JavaScript 函数中调用钩子。
 
-### `npm test`
+为了演示，让我们扩展前面的示例，在一个组件中包含三个输入文本字段。这可能是一个注册表单，包含名字、姓氏和电子邮件字段。
+```js
+import {useState} from "react";
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+export default function RegisterForm() {
+    const [form, setForm] = useState({
+        firstName: "Alan",
+        lastName: "Huang",
+        email: "cmrhyq@gmail.com",
+    });
 
-### `npm run build`
+    return (
+        <div>
+            <label>
+                First Name:
+                <input
+                    value={form.firstName}
+                    onChange={e =>
+                        setForm({
+                            ...form, firstName: e.target.value
+                        })
+                    }/>
+            </label>
+            <label>
+                Last Name:
+                <input
+                    value={form.lastName}
+                    onChange={e =>
+                        setForm({
+                            ...form, lastName: e.target.value
+                        })
+                    }/>
+            </label>
+            <label>
+                Email Address:
+                <input
+                    value={form.email}
+                    onChange={e =>
+                        setForm({
+                            ...form, email: e.target.value
+                        })
+                    }/>
+            </label>
+            <p>
+                {form.firstName}{" "}
+                {form.lastName}{" "}
+                {form.email}{" "}
+            </p>
+        </div>
+    )
+}
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+请注意，您使用的是form 对象来存储所有三个文本输入字段值的状态：
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```js
+const[form, setForm] =useState({
+firstName:'Luke',
+lastName:'Jones',
+email:'lukeJones@sculpture.com',
+});
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+在这种情况下，您不需要有三个单独的状态变量，而是可以将它们合并到一个form 对象中，以获得更好的可读性。
 
-### `npm run eject`
+除了useState 钩子外，还有其他一些钩子也很有用，如useContext,useMemo,useRef 等 。如果需要共享逻辑并在多个组件中重复使用相同的逻辑，可以将逻辑提取到自定义钩子中。自定义钩子具有灵活性，可用于表单处理、动画、计时器等多种 Use Cases。
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+接下来，我将向您介绍 useRef 挂钩的工作原理。
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### useRef钩子
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+我们使用useRef钩子直接访问子元素
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+调用useRef钩子时，它会返回一个ref对象。ref对象有一个名为current的属性
+```js
+function TextInputWithFocusButton() {
+  const inputEl = useRef(null);
+  const onButtonClick = () => {
+    // `current` points to the mounted text input element
+    inputEl.current.focus();
+  };
+  return (
+    <>
+      <input ref={inputEl} type="text" />
+      <button onClick={onButtonClick}>Focus the input</button>
+    </>
+  );
+}
+```
+使用输入元素上的 ref 属性，我就可以访问当前值，并调用其上的 focus() 方法，从而聚焦输入字段。
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+在某些情况下，需要直接访问 DOM，这就是 useRef 钩子发挥作用的地方。
