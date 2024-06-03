@@ -1,11 +1,14 @@
-import RegisterForm from "./components/hooks/RegisterForm";
-import TextInputWithFocusButton from "./components/hooks/TextInputWithFocusButton";
+import React, {useState} from "react";
+import Heading from "./components/state/Heading";
+
 
 function App() {
+    const [word, setWord] = React.useState("Eat")
 
     return (
         <div>
-            <TextInputWithFocusButton/>
+            <Heading message={word + " at Little lemon"}/>
+            <button onClick={() => setWord("Drink")}>Click</button>
         </div>
     );
 }
