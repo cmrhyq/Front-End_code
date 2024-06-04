@@ -124,3 +124,6 @@ function TextInputWithFocusButton() {
 使用输入元素上的 ref 属性，我就可以访问当前值，并调用其上的 focus() 方法，从而聚焦输入字段。
 
 在某些情况下，需要直接访问 DOM，这就是 useRef 钩子发挥作用的地方。
+
+## 状态管理
+
