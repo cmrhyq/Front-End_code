@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/custom.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <title>Search ETH(SETH)</title>
+    <meta http-equiv="Refresh" content="300">
+</head>
+<link rel="stylesheet" href="css/index.css">
+
+<script language="javascript" src="/js/ajax.js"></script>
+<script type="text/javascript">
+    function ChaEth_NodeRealtimeResult(sResponse) {
+        var json = eval("(" + sResponse + ")");
+        if (json["Return"] == "True") {
+            var ethtofiat = json['ethtofiat'];
+            var ethcny = json['ethcny'];
+            var hashrate = json['hashrate'];
+            var change_rate_24h = json['change_rate_24h'];
+            var difficulty = json['difficulty'];
+            var earning_rmb = json['earning_rmb'];
+            var rapid = json['rapid'];
+            var standard = json['standard'];
+            var slow = json['slow'];
+            var total_pending_tx = json['total_pending_tx'];
+            var NodeID = json['NodeID'];
+            var ObjName = "Return";
+            document.getElementById(ObjName).innerHTML = '';
+            var ObjName = "ethtofiat";
+            document.getElementById(ObjName).innerHTML = ethtofiat;
+            var ObjName = "ethcny";
+            document.getElementById(ObjName).innerHTML = ethcny;
+            var ObjName = "hashrate";
+            document.getElementById(ObjName).innerHTML = hashrate;
+            var ObjName = "change_rate_24h";
+            document.getElementById(ObjName).innerHTML = change_rate_24h;
+            var ObjName = "difficulty";
+            document.getElementById(ObjName).innerHTML = difficulty;
+            var ObjName = "earning_rmb";
+            document.getElementById(ObjName).innerHTML = earning_rmb;
+            var ObjName = "rapid";
+            document.getElementById(ObjName).innerHTML = rapid;
+            var ObjName = "standard";
+            document.getElementById(ObjName).innerHTML = standard;
+            var ObjName = "slow";
+            document.getElementById(ObjName).innerHTML = slow;
+            var ObjName = "total_pending_tx";
+            document.getElementById(ObjName).innerHTML = total_pending_tx;
+            var ObjName = "rapidcny";
+            document.getElementById(ObjName).innerHTML = (rapid * 21 / 1000000 * ethcny).toFixed(2);
+            var ObjName = "standardcny";
+            document.getElementById(ObjName).innerHTML = (standard * 21 / 1000000 * ethcny).toFixed(2);
+            var ObjName = "slowcny";
+            document.getElementById(ObjName).innerHTML = (slow * 21 / 1000000 * ethcny).toFixed(2);
+        } else {
+            var nErrorNo = json["ErrorNo"];
+            var nFikErrorNo = json['FikErrorNo'];
+            var NodeID = json['NodeID'];
+            var ObjName = "Return";
+            document.getElementById(ObjName).innerHTML = '<div class="col-md-12"><p align="center"><em>没有足够的数据生成任何有用的指标.<br>请稍后再试.<br><a href="#" title="刷新" onclick="javescript:ChaEth_RefreshRealTime(1);" >刷新数据</a><br></em></p></div>';
+        }
+    }
+</script>
+<input id="node_0" name="node_0" type="hidden" value="1"/>
+<script type="text/javascript">
+    function ChaEth_GetNodeStatus(node_count) {
+        var i = 0;
+        var sNodeIDName;
+        var nNodeID;
+        var postURL;
+        var postStr;
+        var sNodeStatus;
+
+        sNodeIDName = "node_" + i;
+        if (typeof (document.getElementById(sNodeIDName)) == "undefined") {
+            clearInterval(nIntervalID);
+            return;
+        }
+        nNodeID = document.getElementById(sNodeIDName).value;
+        //alert(nNodeID);
+
+        postURL = "./ajax.php";
+        postStr = "nodeid=" + nNodeID;
+        //Sleep(5);
+        RealtimeAjaxBasePost("fiknode", "realtime", "POST", postURL, postStr);
+        i++;
+
+    }
+
+    ChaEth_GetNodeStatus(1);
+
+    function ChaEth_RefreshRealTime(nNodeID) {
+        var postURL = "./ajax.php";
+        var postStr = "nodeid=" + nNodeID;
+        var img = '<img src="/img/loading.gif" alt="正在载入" />';
+
+
+        var ObjName = "ethtofiat";
+        document.getElementById(ObjName).innerHTML = img;
+        var ObjName = "ethcny";
+        document.getElementById(ObjName).innerHTML = img;
+        var ObjName = "hashrate";
+        document.getElementById(ObjName).innerHTML = img;
+        var ObjName = "change_rate_24h";
+        document.getElementById(ObjName).innerHTML = img;
+        var ObjName = "difficulty";
+        document.getElementById(ObjName).innerHTML = img;
+        var ObjName = "earning_rmb";
+        document.getElementById(ObjName).innerHTML = img;
+        var ObjName = "rapid";
+        document.getElementById(ObjName).innerHTML = img;
+        var ObjName = "standard";
+        document.getElementById(ObjName).innerHTML = img;
+        var ObjName = "slow";
+        document.getElementById(ObjName).innerHTML = img;
+        var ObjName = "total_pending_tx";
+        document.getElementById(ObjName).innerHTML = img;
+        var ObjName = "rapidcny";
+        document.getElementById(ObjName).innerHTML = img;
+        var ObjName = "standardcny";
+        document.getElementById(ObjName).innerHTML = img;
+        var ObjName = "slowcny";
+        document.getElementById(ObjName).innerHTML = img;
+
+
+        RealtimeAjaxBasePost("fiknode", "realtime", "POST", postURL, postStr)
+    }
+</script>
+<body>
+
+<div class="container">
+
+    <div class="col-md-12">
+        <h1>Search ETH(SETH)</h1>
+    </div>
+
+
+    <div class="col-md-12">
+        <div class="containers">
+            <div class="input">
+                <input type="text" placeholder="请输入钱包地址" autocomplete="off" id="search-input">
+                <div class="picker">E池ethermine</div>
+                <ul class="picker-list">
+                    <li style="background-image: url(img/Ethermine.ico)">E池ethermine</li>
+                    <li style="background-image: url(img/f2pool.ico)">鱼池f2pool</li>
+                    <li style="background-image: url(img/Hiveon.png)">hiveon</li>
+                    <li style="background-image: url(img/Flexpool.png)">风池flexpool</li>
+                    <li style="background-image: url(img/CrazyPool.png)">C池crazypool</li>
+                    <li style="background-image: url(img/2Miners.ico)">2Miners</li>
+
+                </ul>
+                <div class="hot-list"></div>
+            </div>
+            <div class="search"></div>
+        </div>
+
+        <script src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                helangSearch.init();
+            })
+        </script>
+    </div>
+    <span id="Return"></span>
+    <div class="col-md-6">
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-success"><h4>ETH统计<span class="pull-right"> </span></h4></li>
+            <li class="list-group-item">价格<span class="pull-right"><span id="ethtofiat"><img src="/img/loading.gif"
+                                                                                             alt="正在载入"/></span>$~<span
+                    id="ethcny"><img src="/img/loading.gif" alt="正在载入"/></span>￥<span
+                    id="change_rate_24h"> (0.00%)</span></span></li>
+            <li class="list-group-item">全网算力<span class="pull-right"><span id="hashrate"><img src="/img/loading.gif"
+                                                                                              alt="正在载入"/></span> TH/s</span>
+            </li>
+            <li class="list-group-item">当前难度<span class="pull-right"><span id="difficulty"><img src="/img/loading.gif"
+                                                                                                alt="正在载入"/></span> P</span>
+            </li>
+            <li class="list-group-item">每日收益<span class="pull-right">1MH/s * 24H = <span id="earning_rmb"><img
+                    src="/img/loading.gif" alt="正在载入"/></span>￥</span></li>
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-success"><h4>交易</h4></li>
+            <li class="list-group-item">最快(15秒)<span class="pull-right"><span id="rapid"><img src="/img/loading.gif"
+                                                                                              alt="正在载入"/></span> GWEI ~<span
+                    id="rapidcny"><img src="/img/loading.gif" alt="正在载入"/></span>￥</span></li>
+            <li class="list-group-item">一般(3分钟)<span class="pull-right"><span id="standard"><img src="/img/loading.gif"
+                                                                                                 alt="正在载入"/></span> GWEI ~<span
+                    id="standardcny"><img src="/img/loading.gif" alt="正在载入"/></span>￥</span></li>
+            <li class="list-group-item">缓慢(> 10分钟)<span class="pull-right"><span id="slow"><img src="/img/loading.gif"
+                                                                                                alt="正在载入"/></span> GWEI ~<span
+                    id="slowcny"><img src="/img/loading.gif" alt="正在载入"/></span>￥</span></li>
+            <li class="list-group-item">未确认交易<span class="pull-right"><span id="total_pending_tx"><img
+                    src="/img/loading.gif" alt="正在载入"/></span> 笔</span></li>
+        </ul>
+    </div>
+
+    <div class="col-md-12">
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-warning">
+                <a href="https://minerproxy.vip" target="_blank">中转服务架设</a>&emsp;
+                <a href="https://t.me/Chaethcom" target="_blank">ChaEth-TG群</a>&emsp;
+                <a href="/jsq/" target="_blank">挖矿收益计算器</a>&emsp;
+            </li>
+        </ul>
+    </div>
+</div>
+<!--
+		<div class="col-md-12">
+			<ul class="list-group">
+			E矿池数据查询:<form method="get" action="ethermine/"><input type="text" name="q" size="30" maxlength="150"><input type="submit" value="ethermine"></form>
+			</ul>
+		</div>
+	</div>
+-->
+<div class="col-md-12">
+    <ul class="list-group">
+    </ul>
+</div>
+
+</div>
+
+
+<!-- Please leave this footer block in place, so that others can find ethermine-stats -->
+<div class="container">
+    <div class="col-md-12 footer">
+        <a href="https://t.me/Chaethcom" target="_blank" class="pull-right">telegram</a>
+    </div>
+</div>
+<!-- Please leave this footer block in place, so that others can find ethermine-stats -->
+
+
+<script src="/js/jquery-2.2.3.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+</body>
+
+</html>

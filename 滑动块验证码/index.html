@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="minimal-ui,width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<title>js拖动滑动块验证码代码</title>
+
+<link rel="stylesheet" type="text/css" href="css/verify.slider.css" />
+
+</head>
+<body>
+
+<h4>展示大小直接传参控制，根据验证结果执行你的业务逻辑（总文件不到8kb，不依赖其他插件）</h4>
+<p>示例一（200×40像素）</p>
+<div id="verify_type1"></div>
+<br><br><p>示例二（300×60像素）</p>
+<div id="verify_type2"></div>
+
+<script type="text/javascript" src="js/verify.slider.js" ></script>
+<script type="text/javascript">
+/**
+ * Notes: 调用示例一
+ * User: ZHL
+ * Date: 2020/5/14
+ */
+var type1 = document.getElementById('verify_type1');
+verifyFun.bar({
+	dom:type1,		// dom对象
+	width:'200',	// 盒子宽
+	height:'40',	// 盒子高
+	hsize:'16',		// 提示字体大小
+	size:'20',		// 滑动块箭头字体大小
+	diff:5,			// 误差值
+	success:function() {
+		alert('验证成功');
+		//其他业务逻辑
+	},
+	error:function() {
+		alert('验证失败！');
+		//其他业务逻辑
+	}
+});
+
+/**
+ * Notes: 调用示例二
+ * User: ZHL
+ * Date: 2020/5/14
+ */
+var type2 = document.getElementById('verify_type2');
+verifyFun.bar({
+	dom:type2,		// dom对象
+	width:'300',	// 盒子宽
+	height:'60',	// 盒子高
+	hsize:'16',		// 提示字体大小
+	size:'20',		// 滑动块箭头字体大小
+	diff:5,			// 误差值
+	success:function() {
+		alert('验证成功');
+		//其他业务逻辑
+	},
+	error:function() {
+		alert('验证失败！');
+		//其他业务逻辑
+	}
+});
+
+</script>
+</body>
+</html>
